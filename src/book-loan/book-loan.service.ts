@@ -119,7 +119,7 @@ export class BookLoanService {
     });
 
     if (!isBorrowdByMember) {
-      throw new NotFoundException('Book is not borrowed by the member');
+      throw new BadRequestException('Book is not borrowed by the member');
     }
 
     // Update book loan
