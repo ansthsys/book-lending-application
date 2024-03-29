@@ -42,26 +42,28 @@ export class BookLoanService {
     }
 
     // Check if member is not penalized
-    // 1. Check by last returned book date
-    // 2. Check by last borrowed book date (not returned yet)
-    const memberIsPenalized = await this.prismaService.$executeRawUnsafe(`
-      SELECT EXISTS (
-        SELECT * FROM book_loans 
-        WHERE memberCode = '${payload.memberCode}' 
-        AND (
-          (
-            returned = false 
-            AND returnedAt >= dueDate + INTERVAL 7 DAY
-          ) OR (
-            returned = true 
-            AND returnedAt >= dueDate + INTERVAL 7 DAY
-          )
-        )
-      ) AS is_exists;
+    // Check by last returned book date & 3 days after penalized date
+    const memberIsPenalized: any[] = await this.prismaService.$queryRawUnsafe(`
+      SELECT 
+        CASE
+          WHEN returnedAt > dueDate + INTERVAL 7 DAY THEN
+            CASE
+              WHEN NOW() > returnedAt + INTERVAL 3 DAY 
+              THEN NULL
+              ELSE DATE_FORMAT((returnedAt + INTERVAL 3 DAY), "%d %M %Y")
+            END
+          ELSE NULL
+        END AS isPenalized
+      FROM book_loans 
+      WHERE memberCode = '${payload.memberCode}' 
+      AND returned = true
+      ORDER BY id DESC
+      LIMIT 1;
     `);
 
-    if (memberIsPenalized > 0) {
-      throw new BadRequestException('Member is penalized, try again in 3 days');
+    if (!!memberIsPenalized[0].isPenalized) {
+      const d = memberIsPenalized[0].isPenalized;
+      throw new BadRequestException(`Member is penalized 3 days until ${d}`);
     }
 
     if (book.stock === 0) {
@@ -74,7 +76,6 @@ export class BookLoanService {
         borrowDate: DateTime.now().toISO(),
         dueDate: DateTime.fromISO(payload.dueDate.toString())
           .endOf('day')
-          .plus({ days: 1 })
           .toISO(),
         returned: false,
         returnedAt: null,
