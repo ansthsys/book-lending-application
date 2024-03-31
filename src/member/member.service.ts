@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { MemberEntity } from './entities/member.entity';
 
 @Injectable()
@@ -28,12 +28,5 @@ export class MemberService {
     });
 
     return memberEntities;
-  }
-
-  async detailMember(memberCode: string): Promise<any> {
-    return await this.prismaService.member.findFirstOrThrow({
-      where: { code: memberCode },
-      include: { bookLoan: true },
-    });
   }
 }

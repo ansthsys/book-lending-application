@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { BorrowBookDto } from './dto/borrow-book.dto';
 import { BookLoanEntity } from './entities/book-loan.entity';
 import { ReturnBookDto } from './dto/return-book.dto';
