@@ -4,22 +4,21 @@ Soal https://github.com/eigen3dev/backend-test-case
 
 ## Backend test (Book Lending Application):
 
-folder: `./`
-database using: `mysql`
-create database: `book-lending-application`
-set environment: `cp .env.example .env` then change username and password
-run migration and seed: `npx prisma migrate reset`
-swagger docs: [http://localhost:3000/docs](http://localhost:3000/docs)
+- folder: `./`
+- database using: `mysql`
+- create database: `book-lending-application`
+- set environment: `cp .env.example .env` then change username and password
+- run migration and seed: ` npx prisma migrate reset`
+- swagger docs: [http://localhost:3000/docs](http://localhost:3000/docs)
 
 ## Algoritma test:
 
-folder: `./algoritma`
-running:
-
-```bash
-cd ./algoritma
-node index
-```
+- folder: `./algoritma`
+- running:
+  ```bash
+  cd ./algoritma
+  node index
+  ```
 
 ---
 
