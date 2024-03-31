@@ -17,6 +17,7 @@ Soal https://github.com/eigen3dev/backend-test-case
 - running:
   ```bash
   cd ./algoritma
+  tsc index
   node index
   ```
 
